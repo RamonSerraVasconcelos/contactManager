@@ -32,7 +32,7 @@ const UserController = {
             })
         }
 
-        res.status(200).send({
+        res.status(201).send({
             success: true
         })
     }
