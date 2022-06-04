@@ -12,6 +12,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "latest",
+    "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.2",
     "path": "^0.12.7"
   },
