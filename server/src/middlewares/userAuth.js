@@ -5,7 +5,7 @@ import path from 'path'
 dotenv.config({ path: path.resolve('src', '../../.env') })
 
 const userAuth = (req, res, next) => {
-    if (!req.headers["authorization"]) return res.status(403).send({
+    if (!req.headers["authorization"]) return res.status(401).send({
         success: false,
         message: "User not authorized"
     })
@@ -15,7 +15,7 @@ const userAuth = (req, res, next) => {
 
     jwt.verify(token, process.env.SECRET_JWT_KEY, (err, user) => {
         if (err) {
-            return res.status(403).send({
+            return res.status(401).send({
                 success: false,
                 message: "User not authorized"
             })
@@ -26,4 +26,24 @@ const userAuth = (req, res, next) => {
     })
 }
 
-export default userAuth
+const userAuthRefresh = (req, res, next) => {
+    const { refreshToken } = req.body;
+    if (!refreshToken) return res.status(401).send({
+        success: false,
+        message: "User not authorized"
+    })
+
+    jwt.verify(refreshToken, process.env.SECRET_JWT_KEY_REFRESH, (err, user) => {
+        if (err) {
+            return res.status(401).send({
+                success: false,
+                message: "User not authorized"
+            })
+        }
+
+        req.user = user
+        next()
+    })
+}
+
+export { userAuth, userAuthRefresh }

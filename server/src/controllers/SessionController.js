@@ -28,12 +28,12 @@ const SessionController = {
                 message: "User not found"
             })
 
-            const accessToken = jwt.sign(user, process.env.SECRET_JWT_KEY, { expiresIn: "15m" })
-            const refreshToken = jwt.sign(user, process.env.SECRET_JWT_KEY_REFRESH, { expiresIn: "7d" })
+            const token = jwt.sign(user, process.env.SECRET_JWT_KEY, { expiresIn: "15m" })
+            const refreshToken = jwt.sign({ token }, process.env.SECRET_JWT_KEY_REFRESH, { expiresIn: "7d" })
 
             return res.status(200).send({
                 success: true,
-                accessToken,
+                token,
                 refreshToken
             })
         } catch (error) {
@@ -44,6 +44,23 @@ const SessionController = {
             })
         }
 
+    },
+    async refresh(req, res) {
+        try {
+            const { refreshToken } = req.body
+            const token = jwt.sign({ refreshToken }, process.env.SECRET_JWT_KEY, { expiresIn: '15m' })
+
+            return res.status(200).send({
+                success: true,
+                token
+            })
+        } catch (error) {
+            console.error(error)
+            res.status(500).send({
+                success: false,
+                message: "An unexpected error occurred"
+            })
+        }
     }
 }
 
