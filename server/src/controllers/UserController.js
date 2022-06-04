@@ -5,17 +5,32 @@ const UserController = {
         try {
             const body = req.body
 
-            if (!body.name || !body.password || !req.body.email || !req.body.phone) {
+            if (!body.name || !body.password || !body.confirm_password || !req.body.email || !req.body.phone) {
                 return res.status(422).send({
                     success: false,
                     message: "All fields are required"
                 })
             }
 
-            if (body.name == "" || body.password == "" || req.body.email == "" || req.body.phone == "") {
+            if (body.name == "" || body.password == "" || body.confirm_password == "" || req.body.email == "" || req.body.phone == "") {
                 return res.status(422).send({
                     success: false,
                     message: "All fields are required"
+                })
+            }
+
+            if (body.password != body.confirm_password) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Passwords dont match"
+                })
+            }
+
+            const isEmailDuplicated = await User.findOne({ where: { email: req.body.email } })
+            if (isEmailDuplicated) {
+                return res.status(400).send({
+                    success: false,
+                    message: "Email already exists"
                 })
             }
 
