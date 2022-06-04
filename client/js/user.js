@@ -1,11 +1,15 @@
 $("#loginForm").submit(async (event) => {
     event.preventDefault()
-    requestForm('users/login', 'post', event)
+    const data = new FormData(event.target)
+    const values = Object.fromEntries(data.entries())
+
+    request('/users/login', 'post', values)
         .then((res) => {
             sessionStorage.setItem('userToken', JSON.stringify(res.token))
             sessionStorage.setItem('refreshToken', JSON.stringify(res.refreshToken))
+            location.href = 'http://127.0.0.1:5500/client/home.html'
         })
         .catch((error) => {
-            message("Usuário não encontrado")
+            message(error.responseJSON.message)
         })
 })
