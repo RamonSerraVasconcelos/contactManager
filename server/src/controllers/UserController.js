@@ -7,21 +7,18 @@ const UserController = {
 
             if (!body.name || !body.password || !body.confirm_password || !req.body.email || !req.body.phone) {
                 return res.status(422).send({
-                    success: false,
                     message: "All fields are required"
                 })
             }
 
             if (body.name == "" || body.password == "" || body.confirm_password == "" || req.body.email == "" || req.body.phone == "") {
                 return res.status(422).send({
-                    success: false,
                     message: "All fields are required"
                 })
             }
 
             if (body.password != body.confirm_password) {
                 return res.status(400).send({
-                    success: false,
                     message: "Passwords dont match"
                 })
             }
@@ -29,7 +26,6 @@ const UserController = {
             const isEmailDuplicated = await User.findOne({ where: { email: req.body.email } })
             if (isEmailDuplicated) {
                 return res.status(400).send({
-                    success: false,
                     message: "Email already exists"
                 })
             }
@@ -43,7 +39,6 @@ const UserController = {
 
             if (!await User.create(user)) {
                 return res.status(500).send({
-                    success: false,
                     message: "An unexpected error occured"
                 })
             }
@@ -54,7 +49,6 @@ const UserController = {
         } catch (error) {
             console.error(error)
             res.status(500).send({
-                success: false,
                 message: "An unexpected error occurred"
             })
         }
