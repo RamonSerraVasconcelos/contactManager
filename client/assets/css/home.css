@@ -44,3 +44,20 @@ body {
 a {
   text-decoration: none !important;
 }
+
+.add-button {
+  border-radius: 50%;
+  cursor: pointer;
+  transform: translate(0%, 25%);
+  max-height: 25px;
+  margin-left: 10px;
+}
+
+.delete-button {
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 20px;
+  transform: translate(-50%, 10%);
+  margin-left: 25px;
+}

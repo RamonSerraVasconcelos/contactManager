@@ -62,6 +62,20 @@ $("#contactForm").submit(async (event) => {
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
 
+    const phones = document.getElementsByName('phones')
+    const phonesTypes = document.getElementsByName('phonesTypes')
+
+    const contactPhones = []
+
+    for (i = 0; i < phones.length; i++) {
+        let phone = {}
+        phone.number = phones[i].value
+        phone.type = phonesTypes[i].value
+        contactPhones.push(phone)
+    }
+
+    values.phones = contactPhones
+
     let url = !urlParams.get('contact') ? '/contacts/create' : '/contacts/update/' + urlParams.get('contact')
     let method = !urlParams.get('contact') ? 'post' : 'put'
 
@@ -81,6 +95,35 @@ $("#contactForm").submit(async (event) => {
 $("#contactPic").click(() => {
     $("#fileToUploadContactPic").click()
 })
+
+let rowIndex = 1
+$('.add-button').click(() => {
+    $(".phones").last().append(`
+        <div class="row" id="rowIndex_${rowIndex}">
+            <div class="col-md-6">
+                <div class="form-group">
+                <input type="text" name="phones" id="contact_phone" class="form-control" onkeypress="$(this).mask('(00) 00000-0000')">
+                </div>
+            </div>
+            <div class="col-md-6 d-flex">
+                <div class="form-group col-md-10 p-0">
+                    <select type="text" name="phonesTypes" id="contact_phone" class="form-control">
+                        <option value="1">Celular</option>
+                        <option value="2">Trabalho</option>
+                        <option value="3">Residencial</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <i class="material-icons bg-danger text-white delete-button" onclick="deleteRowIndex(${rowIndex++})">delete</i>
+                </div>
+            </div>
+        </div>
+    `)
+})
+
+function deleteRowIndex(index) {
+    $('#rowIndex_' + index).remove()
+}
 
 function readURL(input) {
     if (input.files && input.files[0]) {
