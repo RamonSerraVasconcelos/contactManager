@@ -33,7 +33,7 @@ const userAuthRefresh = (req, res, next) => {
         message: "User not authorized"
     })
 
-    jwt.verify(refreshToken, process.env.SECRET_JWT_KEY_REFRESH, (err, user) => {
+    jwt.verify(refreshToken, process.env.SECRET_JWT_KEY_REFRESH, (err, token) => {
         if (err) {
             return res.status(401).send({
                 success: false,
@@ -41,7 +41,7 @@ const userAuthRefresh = (req, res, next) => {
             })
         }
 
-        req.user = user
+        req.user = token.user
         next()
     })
 }

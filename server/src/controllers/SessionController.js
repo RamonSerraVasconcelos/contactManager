@@ -29,7 +29,7 @@ const SessionController = {
             })
 
             const token = jwt.sign(user, process.env.SECRET_JWT_KEY, { expiresIn: "15m" })
-            const refreshToken = jwt.sign({ token }, process.env.SECRET_JWT_KEY_REFRESH, { expiresIn: "7d" })
+            const refreshToken = jwt.sign({ user }, process.env.SECRET_JWT_KEY_REFRESH, { expiresIn: "7d" })
 
             return res.status(200).send({
                 success: true,
@@ -47,8 +47,8 @@ const SessionController = {
     },
     async refresh(req, res) {
         try {
-            const { refreshToken } = req.body
-            const token = jwt.sign({ refreshToken }, process.env.SECRET_JWT_KEY, { expiresIn: '15m' })
+            const user = req.user
+            const token = jwt.sign(user, process.env.SECRET_JWT_KEY, { expiresIn: '15m' })
 
             return res.status(200).send({
                 success: true,
