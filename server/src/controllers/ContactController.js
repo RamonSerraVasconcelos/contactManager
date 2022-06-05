@@ -14,6 +14,31 @@ const ContactController = {
         return res.status(200).send({
             contacts
         })
+    },
+    async create(req, res) {
+        if (!req.body.name || !req.body.lastName || !req.body.email || !req.body.phone) {
+            return res.status(422).send({
+                message: "All fields are required"
+            })
+        }
+
+        if (req.body.name == "" || req.body.lastName == "" || req.body.email == "" || req.body.phone == "") {
+            return res.status(422).send({
+                message: "All fields are required"
+            })
+        }
+
+        req.body.userId = req.user.id
+
+        if (!await Contact.create(req.body)) {
+            return res.status(500).send({
+                message: "An unexpected error occured"
+            })
+        }
+
+        return res.status(201).send({
+            message: "Contact created"
+        })
     }
 }
 

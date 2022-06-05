@@ -43,8 +43,8 @@ const UserController = {
                 })
             }
 
-            res.status(201).send({
-                success: true
+            return res.status(201).send({
+                message: "User created"
             })
         } catch (error) {
             console.error(error)
