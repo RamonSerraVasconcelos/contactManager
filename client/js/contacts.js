@@ -1,10 +1,29 @@
 (() => {
     getRequest('/contacts')
         .then((res) => {
-            message("Logado com sucesso")
+            let html = ``
+            res.contacts.forEach(contact => {
+                html += `
+                    <div class="col-md-3">
+                        <div class="contact-box center-version">
+                            <a href="#">
+                            <img alt="image" class="img-circle" src="https://bootdey.com/img/Content/avatar/avatar1.png">
+                            <h3 class="m-b-xs"><strong>${contact.name}</strong></h3>
+                            <div class="font-bold">${contact.lastName}</div>
+                            <address class="m-t-md">
+                                <strong>${contact.email}</strong>
+                                <br>
+                                ${contact.phone}
+                            </address>
+                            </a>
+                        </div>
+                    </div>
+                `
+            })
+            $('#contactList').html(html)
         })
         .catch((error) => {
-            message(error.responseJSON.message)
+            message(error.message)
         })
 })()
 
