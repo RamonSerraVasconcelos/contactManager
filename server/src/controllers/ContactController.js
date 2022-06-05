@@ -34,6 +34,7 @@ const ContactController = {
             }
 
             req.body.userId = req.user.id
+            req.body.phone = req.body.phone.replace(/\D/g, "")
 
             if (!await Contact.create(req.body)) {
                 return res.status(500).send({
