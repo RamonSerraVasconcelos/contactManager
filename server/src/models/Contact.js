@@ -138,6 +138,31 @@ const Contact = {
                 resolve(rows.insertId)
             })
         })
+    },
+    deletePhone(id, userId) {
+        const query = `DELETE p FROM 
+                            tb_phone p  
+                        INNER JOIN
+                            tb_contact c
+                        ON
+                            p.contactId = c.id
+                        WHERE
+                            p.id = ?
+                        AND
+                            c.userId = ?`
+
+        const values = [
+            id,
+            userId
+        ]
+
+        return new Promise(function (resolve, reject) {
+            db.execute(query, values, function (err, rows) {
+                if (err) return reject(err)
+
+                resolve(rows.changedRows)
+            })
+        })
     }
 }
 

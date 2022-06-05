@@ -99,6 +99,10 @@ const ContactController = {
             req.body.userId = req.user.id
             req.body.phone = req.body.phone.replace(/\D/g, "")
 
+            for (const id of req.body.phonesToBeDeleted) {
+                await Contact.deletePhone(id, req.user.id)
+            }
+
             if (!await Contact.update(req.body)) {
                 return res.status(200).send({
                     message: "No fields were updated"
