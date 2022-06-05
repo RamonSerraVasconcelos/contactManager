@@ -27,6 +27,7 @@ $(document).ready(function () {
                 message(error.message)
             })
     })();
+
     (() => {
         const queryString = window.location.search
         const urlParams = new URLSearchParams(queryString)
@@ -46,6 +47,34 @@ $(document).ready(function () {
                 $('#contact_lastName').val(res.contact.lastName)
                 $('#contact_email').val(res.contact.email)
                 $('#contact_phone').val(res.contact.phone)
+
+                res.contact.phones.forEach(phone => {
+                    let selected1 = phone.type == 1 ? "selected" : ""
+                    let selected2 = phone.type == 2 ? "selected" : ""
+                    let selected3 = phone.type == 3 ? "selected" : ""
+
+                    $(".phones").last().append(`
+                        <div class="row" id="rowIndex_${rowIndex}">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                <input type="text" name="phones" id="contact_phone" class="form-control" value="${phone.number}" onkeypress="$(this).mask('(00) 00000-0000')">
+                                </div>
+                            </div>
+                            <div class="col-md-6 d-flex">
+                                <div class="form-group col-md-10 p-0">
+                                    <select type="text" name="phonesTypes" id="contact_phone" class="form-control">
+                                        <option ${selected1} value="1">Celular</option>
+                                        <option ${selected2} value="2">Trabalho</option>
+                                        <option ${selected3} value="3">Residencial</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <i class="material-icons bg-danger text-white delete-button" onclick="deleteRowIndex(${rowIndex++});addToDeleteArray(${phone.id})">delete</i>
+                                </div>
+                            </div>
+                        </div>
+                    `)
+                })
             })
             .catch((error) => {
                 message("Um erro inesperado aconteceu. Por favor tente novamente ou contate o suporte.")
@@ -53,6 +82,7 @@ $(document).ready(function () {
     })()
 })
 
+let phonesToBeDeleted = [];
 
 $("#contactForm").submit(async (event) => {
     event.preventDefault()
@@ -75,6 +105,7 @@ $("#contactForm").submit(async (event) => {
     }
 
     values.phones = contactPhones
+    values.phonesToBeDeleted = phonesToBeDeleted
 
     let url = !urlParams.get('contact') ? '/contacts/create' : '/contacts/update/' + urlParams.get('contact')
     let method = !urlParams.get('contact') ? 'post' : 'put'
@@ -123,6 +154,10 @@ $('.add-button').click(() => {
 
 function deleteRowIndex(index) {
     $('#rowIndex_' + index).remove()
+}
+
+function addToDeleteArray(phoneId) {
+    phonesToBeDeleted.push(phoneId)
 }
 
 function readURL(input) {
