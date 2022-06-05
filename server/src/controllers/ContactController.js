@@ -73,6 +73,40 @@ const ContactController = {
                 message: "An unexpected error occurred"
             })
         }
+    },
+    async update(req, res) {
+        try {
+            if (!req.body.name || !req.body.lastName || !req.body.email || !req.body.phone) {
+                return res.status(422).send({
+                    message: "All fields are required"
+                })
+            }
+
+            if (req.body.name == "" || req.body.lastName == "" || req.body.email == "" || req.body.phone == "") {
+                return res.status(422).send({
+                    message: "All fields are required"
+                })
+            }
+
+            req.body.id = req.params.id
+            req.body.userId = req.user.id
+            req.body.phone = req.body.phone.replace(/\D/g, "")
+
+            if (!await Contact.update(req.body)) {
+                return res.status(200).send({
+                    message: "No fields were updated"
+                })
+            }
+
+            return res.status(200).send({
+                message: "Contact updated"
+            })
+        } catch (error) {
+            console.error(error)
+            res.status(500).send({
+                message: "An unexpected error occurred"
+            })
+        }
     }
 }
 

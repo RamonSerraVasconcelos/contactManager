@@ -56,6 +56,36 @@ const Contact = {
                 resolve(rows.insertId)
             })
         })
+    },
+    update(contact) {
+        const query = `UPDATE
+                            tb_contact
+                        SET
+                            name = ?, 
+                            lastName = ?, 
+                            email = ?, 
+                            phone = ?
+                        WHERE 
+                            id = ?
+                        AND 
+                            userId = ?`
+
+        const values = [
+            contact.name,
+            contact.lastName,
+            contact.email,
+            contact.phone,
+            contact.id,
+            contact.userId
+        ]
+
+        return new Promise(function (resolve, reject) {
+            db.execute(query, values, function (err, rows) {
+                if (err) return reject(err)
+
+                resolve(rows.changedRows)
+            })
+        })
     }
 }
 
