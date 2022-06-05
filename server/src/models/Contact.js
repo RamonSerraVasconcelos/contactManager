@@ -25,6 +25,34 @@ const Contact = {
             })
         })
     },
+    listPhonesByContactId(contactId, userId) {
+        const query = `SELECT 
+                            p.* 
+                        FROM 
+                            tb_phone p
+                        JOIN
+                            tb_contact c
+                        ON
+                            p.contactId = c.id
+                        WHERE 
+                            c.id = ? 
+                        AND 
+                            c.userId = ?`
+
+        const values = [
+            contactId,
+            userId
+        ]
+
+        return new Promise(function (resolve, reject) {
+            db.execute(query, values, (err, rows, fields) => {
+                if (err) {
+                    return reject(err)
+                }
+                resolve(rows)
+            })
+        })
+    },
     create(contact) {
         const query = `INSERT INTO
                             tb_contact

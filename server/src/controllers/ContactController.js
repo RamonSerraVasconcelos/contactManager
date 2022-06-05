@@ -31,6 +31,9 @@ const ContactController = {
                 message: "Contact not found"
             })
 
+            const phones = await Contact.listPhonesByContactId(req.params.id, req.user.id)
+            contact.phones = phones
+
             return res.status(200).send({
                 contact
             })
