@@ -1,40 +1,77 @@
-(() => {
-    getRequest('/contacts')
-        .then((res) => {
-            let html = ``
-            res.contacts.forEach(contact => {
-                html += `
-                    <div class="col-md-3">
-                        <div class="contact-box center-version">
-                            <a href="#">
-                            <img alt="image" class="img-circle" src="https://bootdey.com/img/Content/avatar/avatar1.png">
-                            <h3 class="m-b-xs"><strong>${contact.name}</strong></h3>
-                            <div class="font-bold">${contact.lastName}</div>
-                            <address class="m-t-md">
-                                <strong>${contact.email}</strong>
-                                <br>
-                                ${contact.phone}
-                            </address>
-                            </a>
+$(document).ready(function () {
+    (() => {
+        getRequest('/contacts')
+            .then((res) => {
+                let html = ``
+                res.contacts.forEach(contact => {
+                    html += `
+                        <div class="col-md-3">
+                            <div class="contact-box center-version">
+                                <a href="http://127.0.0.1:5500/client/create.html?contact=${contact.id}">
+                                <img alt="image" class="img-circle" src="https://bootdey.com/img/Content/avatar/avatar1.png">
+                                <h3 class="m-b-xs"><strong>${contact.name}</strong></h3>
+                                <div class="font-bold">${contact.lastName}</div>
+                                <address class="m-t-md">
+                                    <strong>${contact.email}</strong>
+                                    <br>
+                                    ${contact.phone}
+                                </address>
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                `
+                    `
+                })
+                $('#contactList').html(html)
             })
-            $('#contactList').html(html)
-        })
-        .catch((error) => {
-            message(error.message)
-        })
-})()
+            .catch((error) => {
+                message(error.message)
+            })
+    })();
+    (() => {
+        const queryString = window.location.search
+        const urlParams = new URLSearchParams(queryString)
+
+        if (!urlParams.get('contact')) {
+            $('#contact_name').val("")
+            $('#contact_lastName').val("")
+            $('#contact_email').val("")
+            $('#contact_phone').val("")
+            return
+        }
+
+        const contact = urlParams.get('contact')
+        getRequest('/contacts/' + contact)
+            .then((res) => {
+                $('#contact_name').val(res.contact.name)
+                $('#contact_lastName').val(res.contact.lastName)
+                $('#contact_email').val(res.contact.email)
+                $('#contact_phone').val(res.contact.phone)
+            })
+            .catch((error) => {
+                message("Um erro inesperado aconteceu. Por favor tente novamente ou contate o suporte.")
+            })
+    })()
+})
+
 
 $("#contactForm").submit(async (event) => {
     event.preventDefault()
+
     const data = new FormData(event.target)
     const values = Object.fromEntries(data.entries())
+    const queryString = window.location.search
+    const urlParams = new URLSearchParams(queryString)
 
-    request('/contacts/create', 'post', values)
+    let url = !urlParams.get('contact') ? '/contacts/create' : '/contacts/update/' + urlParams.get('contact')
+    let method = !urlParams.get('contact') ? 'post' : 'put'
+
+    request(url, method, values)
         .then((res) => {
-            message("Contato criado com sucesso")
+            if (!urlParams.get('contact')) {
+                message("Contato criado com sucesso")
+                return
+            }
+            message("Contato atualizado com sucesso")
         })
         .catch((error) => {
             message(error.responseJSON.message)
