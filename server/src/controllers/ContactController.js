@@ -19,6 +19,28 @@ const ContactController = {
         }
 
     },
+    async get(req, res) {
+        try {
+            if (!req.params.id) return res.status(400).send({
+                message: "Parameters missing"
+            })
+
+            const contact = await Contact.findOne(req.params.id, req.user.id)
+
+            if (!contact) return res.status(400).send({
+                message: "Contact not found"
+            })
+
+            return res.status(200).send({
+                contact
+            })
+        } catch (error) {
+            console.error(error)
+            res.status(500).send({
+                message: "An unexpected error occurred"
+            })
+        }
+    },
     async create(req, res) {
         try {
             if (!req.body.name || !req.body.lastName || !req.body.email || !req.body.phone) {

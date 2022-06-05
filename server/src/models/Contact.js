@@ -2,7 +2,7 @@ import db from '../database/connection.js'
 
 const Contact = {
     findByUserId(userId) {
-        let query = "SELECT * FROM tb_contact WHERE userId = ?"
+        const query = "SELECT * FROM tb_contact WHERE userId = ?"
 
         return new Promise(function (resolve, reject) {
             db.execute(query, [userId], (err, rows, fields) => {
@@ -10,6 +10,18 @@ const Contact = {
                     return reject(err)
                 }
                 resolve(rows)
+            })
+        })
+    },
+    findOne(id, userId) {
+        const query = "SELECT * FROM tb_contact WHERE id = ? AND userId = ?"
+
+        return new Promise(function (resolve, reject) {
+            db.execute(query, [id, userId], (err, rows, fields) => {
+                if (err) {
+                    return reject(err)
+                }
+                resolve(rows[0])
             })
         })
     },
