@@ -26,7 +26,6 @@ const Contact = {
         })
     },
     create(contact) {
-
         const query = `INSERT INTO
                             tb_contact
                             (userId, 
@@ -84,6 +83,31 @@ const Contact = {
                 if (err) return reject(err)
 
                 resolve(rows.changedRows)
+            })
+        })
+    },
+    createPhone(contactId, number, type) {
+        const query = `INSERT INTO
+                        tb_phone
+                        (contactId, 
+                        number, 
+                        type) 
+                    VALUES 
+                        (?,
+                        ?, 
+                        ?)`
+
+        const values = [
+            contactId,
+            number,
+            type
+        ]
+
+        return new Promise(function (resolve, reject) {
+            db.execute(query, values, function (err, rows) {
+                if (err) return reject(err)
+
+                resolve(rows.insertId)
             })
         })
     }

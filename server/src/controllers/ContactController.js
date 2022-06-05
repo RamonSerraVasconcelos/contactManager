@@ -58,10 +58,14 @@ const ContactController = {
             req.body.userId = req.user.id
             req.body.phone = req.body.phone.replace(/\D/g, "")
 
-            if (!await Contact.create(req.body)) {
-                return res.status(500).send({
-                    message: "An unexpected error occured"
-                })
+            const contactId = await Contact.create(req.body)
+
+            if (!contactId) return res.status(500).send({
+                message: "An unexpected error occured"
+            })
+
+            for (const phone of req.body.phones) {
+                await Contact.createPhone(contactId, phone.number.replace(/\D/g, ""), phone.type)
             }
 
             return res.status(201).send({
