@@ -1,5 +1,5 @@
 (() => {
-    request('/contacts', 'get', {})
+    getRequest('/contacts')
         .then((res) => {
             message("Logado com sucesso")
         })
@@ -7,6 +7,20 @@
             message(error.responseJSON.message)
         })
 })()
+
+$("#contactForm").submit(async (event) => {
+    event.preventDefault()
+    const data = new FormData(event.target)
+    const values = Object.fromEntries(data.entries())
+
+    request('/contacts/create', 'post', values)
+        .then((res) => {
+            message("Contato criado com sucesso")
+        })
+        .catch((error) => {
+            message(error.responseJSON.message)
+        })
+})
 
 $("#contactPic").click(() => {
     $("#fileToUploadContactPic").click()

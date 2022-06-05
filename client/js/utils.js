@@ -22,6 +22,26 @@ function request(action, type, data) {
     })
 }
 
+function getRequest(action) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "http://localhost:3000" + action,
+            headers: {
+                'Authorization': `Bearer ${JSON.parse(sessionStorage.getItem('userToken'))}`,
+            },
+        }).done((res) => {
+            resolve(res)
+        }).fail(async (err) => {
+            if (err.status == 401) {
+                refreshToken()
+                resolve(await request(action, type, data))
+                return
+            }
+            resolve(err)
+        })
+    })
+}
+
 function refreshToken() {
     $.ajax({
         url: "http://localhost:3000/users/refresh",
