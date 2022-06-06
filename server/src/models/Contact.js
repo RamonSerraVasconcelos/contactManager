@@ -139,6 +139,36 @@ const Contact = {
             })
         })
     },
+    updatePhone(id, userId, phone) {
+        const query = `UPDATE
+                            tb_phone p
+                        JOIN
+                            tb_contact c
+                        ON
+                            p.contactId = c.id
+                        SET
+                            p.number = ?, 
+                            p.type = ?
+                        WHERE 
+                            p.id = ?
+                        AND 
+                            c.userId = ?`
+
+        const values = [
+            phone.number,
+            phone.type,
+            id,
+            userId
+        ]
+
+        return new Promise(function (resolve, reject) {
+            db.execute(query, values, function (err, rows) {
+                if (err) return reject(err)
+
+                resolve(rows.changedRows)
+            })
+        })
+    },
     deletePhone(id, userId) {
         const query = `DELETE p FROM 
                             tb_phone p  

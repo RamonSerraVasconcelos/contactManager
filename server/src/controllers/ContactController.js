@@ -103,6 +103,14 @@ const ContactController = {
                 await Contact.deletePhone(id, req.user.id)
             }
 
+            for (const phone of req.body.phones) {
+                if (phone.id == -1) {
+                    await Contact.createPhone(req.body.id, phone.number.replace(/\D/g, ""), phone.type)
+                } else {
+                    await Contact.updatePhone(phone.id, req.user.id, phone)
+                }
+            }
+
             if (!await Contact.update(req.body)) {
                 return res.status(200).send({
                     message: "No fields were updated"
