@@ -55,6 +55,7 @@ $(document).ready(function () {
 
                     $(".phones").last().append(`
                         <div class="row" id="rowIndex_${rowIndex}">
+                            <input type="hidden" name="phonesIds" value="${phone.id}"></input>
                             <div class="col-md-6">
                                 <div class="form-group">
                                 <input type="text" name="phones" id="contact_phone" class="form-control" value="${phone.number}" onkeypress="$(this).mask('(00) 00000-0000')">
@@ -92,6 +93,7 @@ $("#contactForm").submit(async (event) => {
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
 
+    const phonesIds = document.getElementsByName('phonesIds')
     const phones = document.getElementsByName('phones')
     const phonesTypes = document.getElementsByName('phonesTypes')
 
@@ -99,6 +101,7 @@ $("#contactForm").submit(async (event) => {
 
     for (i = 0; i < phones.length; i++) {
         let phone = {}
+        phone.id = phonesIds[i].value
         phone.number = phones[i].value
         phone.type = phonesTypes[i].value
         contactPhones.push(phone)
@@ -131,6 +134,7 @@ let rowIndex = 1
 $('.add-button').click(() => {
     $(".phones").last().append(`
         <div class="row" id="rowIndex_${rowIndex}">
+            <input type="hidden" name="phonesIds" value="-1"></input>
             <div class="col-md-6">
                 <div class="form-group">
                 <input type="text" name="phones" id="contact_phone" class="form-control" onkeypress="$(this).mask('(00) 00000-0000')">
