@@ -174,6 +174,9 @@ $("#contactForm").submit(async (event) => {
 
     request(url, method, values)
         .then((res) => {
+            if (document.getElementById('fileToUploadContactPic').files.length > 0) {
+                saveContactPic(res.contactId)
+            }
             if (!urlParams.get('contact')) {
                 message("Contato criado com sucesso")
                 return
@@ -181,9 +184,29 @@ $("#contactForm").submit(async (event) => {
             message("Contato atualizado com sucesso")
         })
         .catch((error) => {
-            message(error.responseJSON.message)
+            message(error.message)
         })
 })
+
+function saveContactPic(contactId) {
+    var formData = new FormData();
+    formData.append('fileToUploadContactPic', document.getElementById('fileToUploadContactPic').files[0])
+    formData.append('contactId', contactId);
+
+    $.ajax({
+        url: "http://localhost:3000/contacts/saveContactPic",
+        headers: {
+            'Authorization': `Bearer ${JSON.parse(sessionStorage.getItem('userToken'))}`,
+        },
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+
+        }
+    })
+}
 
 $("#contactPic").click(() => {
     $("#fileToUploadContactPic").click()
