@@ -9,6 +9,7 @@ dotenv.config({ path: path.resolve('src', '../../.env') })
 const server = express()
 server.use(express.json())
 server.use(cors())
+server.use(express.static('public'))
 server.use('/', routes)
 
 server.use((req, res, next) => {
