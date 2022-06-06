@@ -53,6 +53,14 @@ a {
   margin-left: 10px;
 }
 
+.add-button-address {
+  border-radius: 50%;
+  cursor: pointer;
+  transform: translate(0%, 25%);
+  max-height: 25px;
+  margin-left: 10px;
+}
+
 .delete-button {
   border-radius: 50%;
   cursor: pointer;
@@ -60,4 +68,9 @@ a {
   font-size: 20px;
   transform: translate(-50%, 10%);
   margin-left: 25px;
+}
+
+.address-row {
+  border-bottom: 1px solid #c2c2c2;
+  margin-bottom: 5px;
 }

@@ -137,12 +137,12 @@ $('.add-button').click(() => {
             <input type="hidden" name="phonesIds" value="-1"></input>
             <div class="col-md-6">
                 <div class="form-group">
-                <input type="text" name="phones" id="contact_phone" class="form-control" onkeypress="$(this).mask('(00) 00000-0000')">
+                <input type="text" name="phones" class="form-control" onkeypress="$(this).mask('(00) 00000-0000')">
                 </div>
             </div>
             <div class="col-md-6 d-flex">
                 <div class="form-group col-md-10 p-0">
-                    <select type="text" name="phonesTypes" id="contact_phone" class="form-control">
+                    <select type="text" name="phonesTypes" class="form-control">
                         <option value="1">Celular</option>
                         <option value="2">Trabalho</option>
                         <option value="3">Residencial</option>
@@ -156,8 +156,71 @@ $('.add-button').click(() => {
     `)
 })
 
+let rowAddressIndex = 1
+$('.add-button-address').click(() => {
+    $(".addresses").last().append(`
+        <div class="row address-row" id="rowAddressIndex_${rowAddressIndex}">
+            <input type="hidden" name="addressesIds" value="-1"></input>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" name="addressesCep" id="address_cep" class="form-control cep" onkeypress="$(this).mask('00000-000')" placeholder="CEP" onblur="searchCep(this.value)">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" name="addressesStreet" id="address_street" class="form-control" placeholder="Endereço">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" name="addressesState" id="address_state" class="form-control" placeholder="Estado">
+                </div>
+            </div>
+            <div class="col-md-6 d-flex">
+                <div class="form-group col-md-10 p-0">
+                    <input type="text" name="addressesCity" id="address_city" class="form-control" placeholder="Cidade">
+                </div>
+                <div class="form-group">
+                    <i class="material-icons bg-danger text-white delete-button" onclick="deleteRowAddress(${rowAddressIndex++})">delete</i>
+                </div>
+            </div>
+        </div>
+    `)
+})
+
+function searchCep(value) {
+    const cep = value.replace(/\D/g, '');
+
+    if (cep != "") {
+        const validateCep = /^[0-9]{8}$/;
+
+        if (validateCep.test(cep)) {
+            $.get('https://viacep.com.br/ws/' + cep + '/json', (res) => {
+                $('#address_street').val(res.logradouro)
+                $('#address_state').val(res.uf)
+                $('#address_city').val(res.localidade)
+            })
+            return
+        }
+
+        message("Formato de CEP inválido.");
+    }
+    cleanCepForm();
+}
+
+function cleanCepForm() {
+    $('#address_cep').val('')
+    $('#address_street').val('')
+    $('#address_state').val('')
+    $('#address_city').val('')
+}
+
 function deleteRowIndex(index) {
     $('#rowIndex_' + index).remove()
+}
+
+function deleteRowAddress(index) {
+    $('#rowAddressIndex_' + index).remove()
 }
 
 function addToDeleteArray(phoneId) {
