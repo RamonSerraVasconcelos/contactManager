@@ -53,6 +53,34 @@ const Contact = {
             })
         })
     },
+    listAdressesByContactId(contactId, userId) {
+        const query = `SELECT 
+                            a.* 
+                        FROM 
+                            tb_address a
+                        JOIN
+                            tb_contact c
+                        ON
+                            a.contactId = c.id
+                        WHERE 
+                            c.id = ? 
+                        AND 
+                            c.userId = ?`
+
+        const values = [
+            contactId,
+            userId
+        ]
+
+        return new Promise(function (resolve, reject) {
+            db.execute(query, values, (err, rows, fields) => {
+                if (err) {
+                    return reject(err)
+                }
+                resolve(rows)
+            })
+        })
+    },
     create(contact) {
         const query = `INSERT INTO
                             tb_contact
@@ -178,6 +206,96 @@ const Contact = {
                             p.contactId = c.id
                         WHERE
                             p.id = ?
+                        AND
+                            c.userId = ?`
+
+        const values = [
+            id,
+            userId
+        ]
+
+        return new Promise(function (resolve, reject) {
+            db.execute(query, values, function (err, rows) {
+                if (err) return reject(err)
+
+                resolve(rows.changedRows)
+            })
+        })
+    },
+    createAddress(contactId, address) {
+        const query = `INSERT INTO
+                        tb_address
+                        (contactId, 
+                        cep, 
+                        street,
+                        state,
+                        city) 
+                    VALUES 
+                        (?,
+                        ?, 
+                        ?,
+                        ?,
+                        ?)`
+
+        const values = [
+            contactId,
+            address.cep,
+            address.street,
+            address.state,
+            address.city
+        ]
+
+        return new Promise(function (resolve, reject) {
+            db.execute(query, values, function (err, rows) {
+                if (err) return reject(err)
+
+                resolve(rows.insertId)
+            })
+        })
+    },
+    updateAddress(userId, address) {
+        const query = `UPDATE
+                            tb_address a
+                        JOIN
+                            tb_contact c
+                        ON
+                            a.contactId = c.id
+                        SET
+                            a.cep = ?, 
+                            a.street = ?,
+                            a.state = ?,
+                            a.city = ?
+                        WHERE 
+                            a.id = ?
+                        AND 
+                            c.userId = ?`
+
+        const values = [
+            address.cep,
+            address.street,
+            address.state,
+            address.city,
+            address.id,
+            userId
+        ]
+
+        return new Promise(function (resolve, reject) {
+            db.execute(query, values, function (err, rows) {
+                if (err) return reject(err)
+
+                resolve(rows.changedRows)
+            })
+        })
+    },
+    deleteAddress(id, userId) {
+        const query = `DELETE a FROM 
+                            tb_address a  
+                        INNER JOIN
+                            tb_contact c
+                        ON
+                            a.contactId = c.id
+                        WHERE
+                            a.id = ?
                         AND
                             c.userId = ?`
 

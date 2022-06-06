@@ -34,6 +34,9 @@ const ContactController = {
             const phones = await Contact.listPhonesByContactId(req.params.id, req.user.id)
             contact.phones = phones
 
+            const adresses = await Contact.listAdressesByContactId(req.params.id, req.user.id)
+            contact.addresses = adresses
+
             return res.status(200).send({
                 contact
             })
@@ -108,6 +111,20 @@ const ContactController = {
                     await Contact.createPhone(req.body.id, phone.number.replace(/\D/g, ""), phone.type)
                 } else {
                     await Contact.updatePhone(phone.id, req.user.id, phone)
+                }
+            }
+
+            for (const id of req.body.addressesToBeDeleted) {
+                await Contact.deleteAddress(id, req.user.id)
+            }
+
+            for (const address of req.body.addresses) {
+                address.cep = address.cep.replace(/\D/g, "")
+
+                if (address.id == -1) {
+                    await Contact.createAddress(req.body.id, address)
+                } else {
+                    await Contact.updateAddress(req.user.id, address)
                 }
             }
 
