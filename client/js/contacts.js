@@ -5,7 +5,7 @@ $(document).ready(function () {
                 let html = ``
                 res.contacts.forEach(contact => {
                     html += `
-                        <div class="col-md-3">
+                        <div class="col-md-3 contactsDiv">
                             <div class="contact-box center-version">
                                 <a href="http://127.0.0.1:5500/client/create.html?contact=${contact.id}">
                                 <img alt="image" class="img-circle" src="https://bootdey.com/img/Content/avatar/avatar1.png">
@@ -76,6 +76,37 @@ $(document).ready(function () {
                         </div>
                     `)
                 })
+
+                res.contact.addresses.forEach(address => {
+                    $(".addresses").last().append(`
+                        <div class="row address-row" id="rowAddressIndex_${rowAddressIndex}">
+                            <input type="hidden" name="addressesIds" value="${address.id}"></input>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" name="addressesCep" id="address_cep_${rowAddressIndex}" class="form-control cep" onkeypress="$(this).mask('00000-000')" placeholder="CEP" onblur="searchCep(this.value, ${rowAddressIndex})" value="${address.cep}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" name="addressesStreet" id="address_street_${rowAddressIndex}" class="form-control" placeholder="Endereço" value="${address.street}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" name="addressesState" id="address_state_${rowAddressIndex}" class="form-control" placeholder="Estado" value="${address.state}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 d-flex">
+                                <div class="form-group col-md-10 p-0">
+                                    <input type="text" name="addressesCity" id="address_city_${rowAddressIndex}" class="form-control" placeholder="Cidade" value="${address.city}" required>
+                                </div>
+                                <div class="form-group">
+                                    <i class="material-icons bg-danger text-white delete-button" onclick="deleteRowAddress(${rowAddressIndex++});addAddressToDeleteArray(${address.id})">delete</i>
+                                </div>
+                            </div>
+                        </div>
+                    `)
+                })
             })
             .catch((error) => {
                 message("Um erro inesperado aconteceu. Por favor tente novamente ou contate o suporte.")
@@ -83,7 +114,8 @@ $(document).ready(function () {
     })()
 })
 
-let phonesToBeDeleted = [];
+let phonesToBeDeleted = []
+let addressesToBeDeleted = []
 
 $("#contactForm").submit(async (event) => {
     event.preventDefault()
@@ -97,7 +129,14 @@ $("#contactForm").submit(async (event) => {
     const phones = document.getElementsByName('phones')
     const phonesTypes = document.getElementsByName('phonesTypes')
 
+    const addressesIds = document.getElementsByName('addressesIds')
+    const addressesCep = document.getElementsByName('addressesCep')
+    const addressesStreet = document.getElementsByName('addressesStreet')
+    const addressesState = document.getElementsByName('addressesState')
+    const addressesCity = document.getElementsByName('addressesCity')
+
     const contactPhones = []
+    const addresses = []
 
     for (i = 0; i < phones.length; i++) {
         let phone = {}
@@ -107,8 +146,21 @@ $("#contactForm").submit(async (event) => {
         contactPhones.push(phone)
     }
 
+    for (i = 0; i < addressesIds.length; i++) {
+        let address = {}
+        address.id = addressesIds[i].value
+        address.cep = addressesCep[i].value
+        address.street = addressesStreet[i].value
+        address.state = addressesState[i].value
+        address.city = addressesCity[i].value
+        addresses.push(address)
+    }
+
     values.phones = contactPhones
     values.phonesToBeDeleted = phonesToBeDeleted
+
+    values.addresses = addresses
+    values.addressesToBeDeleted = addressesToBeDeleted
 
     let url = !urlParams.get('contact') ? '/contacts/create' : '/contacts/update/' + urlParams.get('contact')
     let method = !urlParams.get('contact') ? 'post' : 'put'
@@ -137,7 +189,7 @@ $('.add-button').click(() => {
             <input type="hidden" name="phonesIds" value="-1"></input>
             <div class="col-md-6">
                 <div class="form-group">
-                <input type="text" name="phones" class="form-control" onkeypress="$(this).mask('(00) 00000-0000')">
+                <input type="text" name="phones" class="form-control" onkeypress="$(this).mask('(00) 00000-0000')" required>
                 </div>
             </div>
             <div class="col-md-6 d-flex">
@@ -163,22 +215,22 @@ $('.add-button-address').click(() => {
             <input type="hidden" name="addressesIds" value="-1"></input>
             <div class="col-md-6">
                 <div class="form-group">
-                    <input type="text" name="addressesCep" id="address_cep" class="form-control cep" onkeypress="$(this).mask('00000-000')" placeholder="CEP" onblur="searchCep(this.value)">
+                    <input type="text" name="addressesCep" id="address_cep_${rowAddressIndex}" class="form-control cep" onkeypress="$(this).mask('00000-000')" placeholder="CEP" onblur="searchCep(this.value, ${rowAddressIndex})" required>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <input type="text" name="addressesStreet" id="address_street" class="form-control" placeholder="Endereço">
+                    <input type="text" name="addressesStreet" id="address_street_${rowAddressIndex}" class="form-control" placeholder="Endereço" required>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <input type="text" name="addressesState" id="address_state" class="form-control" placeholder="Estado">
+                    <input type="text" name="addressesState" id="address_state_${rowAddressIndex}" class="form-control" placeholder="Estado" required>
                 </div>
             </div>
             <div class="col-md-6 d-flex">
                 <div class="form-group col-md-10 p-0">
-                    <input type="text" name="addressesCity" id="address_city" class="form-control" placeholder="Cidade">
+                    <input type="text" name="addressesCity" id="address_city_${rowAddressIndex}" class="form-control" placeholder="Cidade" required>
                 </div>
                 <div class="form-group">
                     <i class="material-icons bg-danger text-white delete-button" onclick="deleteRowAddress(${rowAddressIndex++})">delete</i>
@@ -188,7 +240,14 @@ $('.add-button-address').click(() => {
     `)
 })
 
-function searchCep(value) {
+$('#contactsSearch').on("keyup", () => {
+    var value = $('#contactsSearch').val().toLowerCase()
+    $(".contactsDiv").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+})
+
+function searchCep(value, fieldsId) {
     const cep = value.replace(/\D/g, '');
 
     if (cep != "") {
@@ -196,23 +255,23 @@ function searchCep(value) {
 
         if (validateCep.test(cep)) {
             $.get('https://viacep.com.br/ws/' + cep + '/json', (res) => {
-                $('#address_street').val(res.logradouro)
-                $('#address_state').val(res.uf)
-                $('#address_city').val(res.localidade)
+                $('#address_street_' + fieldsId).val(res.logradouro)
+                $('#address_state_' + fieldsId).val(res.uf)
+                $('#address_city_' + fieldsId).val(res.localidade)
             })
             return
         }
 
         message("Formato de CEP inválido.");
     }
-    cleanCepForm();
+    cleanCepForm(fieldsId);
 }
 
-function cleanCepForm() {
-    $('#address_cep').val('')
-    $('#address_street').val('')
-    $('#address_state').val('')
-    $('#address_city').val('')
+function cleanCepForm(fieldsId) {
+    $('#address_cep' + fieldsId).val('')
+    $('#address_street' + fieldsId).val('')
+    $('#address_state' + fieldsId).val('')
+    $('#address_city' + fieldsId).val('')
 }
 
 function deleteRowIndex(index) {
@@ -225,6 +284,10 @@ function deleteRowAddress(index) {
 
 function addToDeleteArray(phoneId) {
     phonesToBeDeleted.push(phoneId)
+}
+
+function addAddressToDeleteArray(addressId) {
+    addressesToBeDeleted.push(addressId)
 }
 
 function readURL(input) {
