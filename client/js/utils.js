@@ -62,3 +62,9 @@ function message(message) {
     snackbar.className = "show";
     setTimeout(function () { snackbar.className = snackbar.className.replace("show", ""); }, 3000);
 }
+
+$('#logout').click(() => {
+    sessionStorage.removeItem("userToken")
+    sessionStorage.removeItem("refreshToken")
+    location.href = "http://127.0.0.1:5500/client/index.html"
+})

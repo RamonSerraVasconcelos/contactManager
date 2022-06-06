@@ -1,4 +1,11 @@
 $(document).ready(function () {
+    if (!sessionStorage.getItem('userToken')) {
+        location.href = "http://127.0.0.1:5500/client/index.html"
+        return
+    }
+})
+
+$(document).ready(function () {
     (() => {
         getRequest('/contacts')
             .then((res) => {
