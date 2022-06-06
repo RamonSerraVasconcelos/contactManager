@@ -142,6 +142,30 @@ const Contact = {
             })
         })
     },
+    saveContactPic(thumb, contactId, userId) {
+        const query = `UPDATE
+                            tb_contact
+                        SET
+                            profilePic = ?
+                        WHERE 
+                            id = ?
+                        AND 
+                            userId = ?`
+
+        const values = [
+            thumb,
+            contactId,
+            userId
+        ]
+
+        return new Promise(function (resolve, reject) {
+            db.execute(query, values, function (err, rows) {
+                if (err) return reject(err)
+
+                resolve(rows.changedRows)
+            })
+        })
+    },
     createPhone(contactId, number, type) {
         const query = `INSERT INTO
                         tb_phone

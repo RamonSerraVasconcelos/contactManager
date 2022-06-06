@@ -75,7 +75,8 @@ const ContactController = {
             }
 
             return res.status(201).send({
-                message: "Contact created"
+                message: "Contact created",
+                contactId
             })
         } catch (error) {
             console.error(error)
@@ -130,12 +131,28 @@ const ContactController = {
 
             if (!await Contact.update(req.body)) {
                 return res.status(200).send({
-                    message: "No fields were updated"
+                    message: "No fields were updated",
+                    contactId: req.body.id
                 })
             }
 
             return res.status(200).send({
-                message: "Contact updated"
+                message: "Contact updated",
+                contactId: req.body.id
+            })
+        } catch (error) {
+            console.error(error)
+            res.status(500).send({
+                message: "An unexpected error occurred"
+            })
+        }
+    },
+    async saveContactPic(req, res) {
+        try {
+            await Contact.saveContactPic(req.file.filename, req.body.contactId, req.user.id)
+
+            return res.status(200).send({
+                message: "Picture updated"
             })
         } catch (error) {
             console.error(error)
