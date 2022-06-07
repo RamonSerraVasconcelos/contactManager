@@ -15,7 +15,7 @@ $(document).ready(function () {
                         <div class="col-md-3 contactsDiv">
                             <div class="contact-box center-version">
                                 <a href="http://127.0.0.1:5500/client/create.html?contact=${contact.id}">
-                                <img alt="image" class="img-circle" src="https://bootdey.com/img/Content/avatar/avatar1.png">
+                                <img alt="image" class="img-circle" src="${contact.profilePic}">
                                 <h3 class="m-b-xs"><strong>${contact.name}</strong></h3>
                                 <div class="font-bold">${contact.lastName}</div>
                                 <address class="m-t-md">
@@ -50,6 +50,9 @@ $(document).ready(function () {
         const contact = urlParams.get('contact')
         getRequest('/contacts/' + contact)
             .then((res) => {
+
+                $('#contactPicture').attr("src", res.contact.profilePic)
+
                 $('#contact_name').val(res.contact.name)
                 $('#contact_lastName').val(res.contact.lastName)
                 $('#contact_email').val(res.contact.email)
