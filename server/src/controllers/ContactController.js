@@ -8,6 +8,14 @@ const ContactController = {
                 message: "No contacts found"
             })
 
+            contacts.forEach(contact => {
+                if (contact.profilePic == "" || contact.profilePic == null) {
+                    contact.profilePic = "https://bootdey.com/img/Content/avatar/avatar1.png"
+                } else {
+                    contact.profilePic = "http://localhost:3000/images/" + contact.profilePic
+                }
+            })
+
             return res.status(200).send({
                 contacts
             })
@@ -36,6 +44,12 @@ const ContactController = {
 
             const adresses = await Contact.listAdressesByContactId(req.params.id, req.user.id)
             contact.addresses = adresses
+
+            if (contact.profilePic == "" || contact.profilePic == null) {
+                contact.profilePic = "https://bootdey.com/img/Content/avatar/avatar1.png"
+            } else {
+                contact.profilePic = "http://localhost:3000/images/" + contact.profilePic
+            }
 
             return res.status(200).send({
                 contact
