@@ -29,6 +29,7 @@ $(document).ready(function () {
                     `
                 })
                 $('#contactList').html(html)
+                $('#profilePageUrl').attr("href", "http://127.0.0.1:5500/client/userPage.html?id=" + res.userId)
             })
             .catch((error) => {
                 message(error.message)
@@ -117,6 +118,7 @@ $(document).ready(function () {
                         </div>
                     `)
                 })
+                $('#profilePageUrl').attr("href", "http://127.0.0.1:5500/client/userPage.html?id=" + res.userId)
             })
             .catch((error) => {
                 message("Um erro inesperado aconteceu. Por favor tente novamente ou contate o suporte.")
