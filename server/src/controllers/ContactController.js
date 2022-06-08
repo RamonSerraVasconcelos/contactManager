@@ -17,7 +17,7 @@ const ContactController = {
                 }
             })
 
-            const user = await User.findOne({ where: { id: req.params.id } })
+            const user = await User.findOne({ where: { id: req.user.id } })
 
             if (user.profilePic == "" || user.profilePic == null) {
                 user.profilePic = "https://bootdey.com/img/Content/avatar/avatar1.png"
@@ -62,7 +62,7 @@ const ContactController = {
                 contact.profilePic = "http://localhost:3000/images/" + contact.profilePic
             }
 
-            const user = await User.findOne({ where: { id: req.params.id } })
+            const user = await User.findOne({ where: { id: req.user.id } })
 
             if (user.profilePic == "" || user.profilePic == null) {
                 user.profilePic = "https://bootdey.com/img/Content/avatar/avatar1.png"

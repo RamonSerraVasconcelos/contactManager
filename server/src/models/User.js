@@ -66,7 +66,7 @@ const User = {
         const values = [
             user.name,
             user.email,
-            user.ephone,
+            user.phone,
             id
         ]
 
