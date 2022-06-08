@@ -28,7 +28,7 @@
               <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Email" required>
             </div>
             <div class="mb-3">
-              <input type="text" class="form-control" name="phone" placeholder="Telefone" required>
+              <input type="text" class="form-control" name="phone" placeholder="Telefone" onkeypress="$(this).mask('(00) 00000-0000')" required>
             </div>
             <div class="mb-3">
               <input type="password" class="form-control" name="password" placeholder="Senha" required>
@@ -47,6 +47,7 @@
   <div id="snackbar"></div>
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src="js/utils.js" crossorigin="anonymous"></script>
 <script src="js/user.js" crossorigin="anonymous"></script>

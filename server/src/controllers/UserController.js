@@ -35,7 +35,7 @@ const UserController = {
                 name: body.name,
                 password: body.password,
                 email: body.email,
-                phone: body.phone
+                phone: body.phone.replace(/\D/g, "")
             }
 
             if (!await User.create(user)) {
