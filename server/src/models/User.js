@@ -77,6 +77,27 @@ const User = {
                 resolve(rows.changedRows)
             })
         })
+    },
+    saveProfilePic(id, thumb) {
+        const query = `UPDATE
+                            tb_user
+                        SET
+                            profilePic = ?
+                        WHERE 
+                            id = ?`
+
+        const values = [
+            thumb,
+            id
+        ]
+
+        return new Promise(function (resolve, reject) {
+            db.execute(query, values, function (err, rows) {
+                if (err) return reject(err)
+
+                resolve(rows.changedRows)
+            })
+        })
     }
 }
 

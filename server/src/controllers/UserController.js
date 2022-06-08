@@ -106,6 +106,20 @@ const UserController = {
             })
         }
     },
+    async saveProfilePic(req, res) {
+        try {
+            await User.saveProfilePic(req.user.id, req.file.filename)
+
+            return res.status(200).send({
+                message: "Picture updated"
+            })
+        } catch (error) {
+            console.error(error)
+            res.status(500).send({
+                message: "An unexpected error occurred"
+            })
+        }
+    },
     async get(req, res) {
         try {
             if (req.params.id != req.user.id) {
