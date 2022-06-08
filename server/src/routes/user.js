@@ -9,5 +9,6 @@ userRouter.post('/register', UserController.create)
 userRouter.post('/login', SessionController.login)
 userRouter.post('/refresh', userAuthRefresh, SessionController.refresh)
 userRouter.get('/:id', userAuth, UserController.get)
+userRouter.put(':id', userAuth, UserController.update)
 
 export default userRouter

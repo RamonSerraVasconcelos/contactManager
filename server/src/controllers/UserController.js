@@ -70,6 +70,42 @@ const UserController = {
         }
 
     },
+    async update(req, res) {
+        try {
+            if (req.params.id != req.user.id) {
+                return res.status(401).send({
+                    message: "Not authorized"
+                })
+            }
+
+            if (!req.body.name || !req.body.email || !req.body.phone) {
+                return res.status(422).send({
+                    message: "All fields are required"
+                })
+            }
+
+            if (req.body.name == "" || req.body.email == "" || req.body.phone == "") {
+                return res.status(422).send({
+                    message: "All fields are required"
+                })
+            }
+
+            if (!await User.update(req.params.id, req.body)) {
+                return res.status(500).send({
+                    message: "An unexpected error occurred"
+                })
+            }
+
+            res.status(200).send({
+                message: "User updated"
+            })
+        } catch (error) {
+            console.error(error)
+            res.status(500).send({
+                message: "An unexpected error occurred"
+            })
+        }
+    },
     async get(req, res) {
         try {
             if (req.params.id != req.user.id) {
