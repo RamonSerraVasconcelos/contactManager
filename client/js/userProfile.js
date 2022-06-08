@@ -21,8 +21,8 @@ $(document).ready(function () {
             $('#userEmail').val(res.user.email)
             $('#userPhone').val(res.user.phone)
             $('#userPic').attr('src', res.user.profilePic)
-            $('#myProfilepic').attr('src', res.user.profilePic)
-            $('#profilePageUrl').attr("href", "http://127.0.0.1:5500/client/userPage.html?id=" + res.userId)
+            $('#profilePic').attr('src', res.user.profilePic)
+            $('#profilePageUrl').attr("href", "http://127.0.0.1:5500/client/userPage.html?id=" + userId)
         })
         .catch((error) => {
             message(error.message)
@@ -44,3 +44,57 @@ $('#userForm').submit((event) => {
             message(error.message)
         })
 })
+
+$("#myProfilepic").click(() => {
+    $("#fileToUploadProfilePic").click()
+})
+
+$('#savePicForm').submit((event) => {
+    event.preventDefault()
+
+    var formData = new FormData();
+    formData.append('fileToUploadProfilePic', document.getElementById('fileToUploadProfilePic').files[0])
+
+    $.ajax({
+        url: "http://localhost:3000/users/saveProfilePic",
+        headers: {
+            'Authorization': `Bearer ${JSON.parse(sessionStorage.getItem('userToken'))}`,
+        },
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            message("Foto atualizada com sucesso.")
+        }
+    })
+})
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#profilePic').attr('src', e.target.result)
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function validarImagem(field) {
+    documento = $("#" + field.id).val();
+    var upld = documento.split('.').pop();
+    if (upld == 'jpg' || upld == 'jpeg' || upld == 'png') {
+        const fileSize = field.files[0].size / 1024 / 1024; // in MiB
+        if (fileSize > 5) {
+            message("O arquivo não deve ser maior que 5MB.")
+            field.value = '';
+        }
+
+        readURL(field)
+    } else {
+        message("O documento deve estar nos formatos jpg, jpeg ou png.")
+        field.value = '';
+    }
+}
