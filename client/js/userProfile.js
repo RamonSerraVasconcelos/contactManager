@@ -16,6 +16,7 @@ $(document).ready(function () {
 
     getRequest('/users/' + userId)
         .then((res) => {
+            $('#userId').val(res.user.id)
             $('#userName').val(res.user.name)
             $('#userEmail').val(res.user.email)
             $('#userPhone').val(res.user.phone)
@@ -27,3 +28,19 @@ $(document).ready(function () {
             message(error.message)
         })
 })();
+
+$('#userForm').submit((event) => {
+    event.preventDefault()
+
+    const url = "/users/" + $('#userId').val()
+    const data = new FormData(event.target)
+    const values = Object.fromEntries(data.entries())
+
+    request(url, 'put', values)
+        .then((res) => {
+            message("Informações atualizadas com sucesso")
+        })
+        .catch((error) => {
+            message(error.message)
+        })
+})

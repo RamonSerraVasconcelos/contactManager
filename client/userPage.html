@@ -44,7 +44,8 @@
           </div>
         </div>
       </form>
-      <form style="display: contents;">
+      <form id="userForm" style="display: contents;">
+        <input type="hidden" id="userId">
         <div class="col-md-5 border-right">
           <div class="p-3 py-5">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -53,7 +54,7 @@
             <div class="row mt-3" style="box-shadow: none !important;">
               <div class="col-md-12">
                 <label class="labels">Nome</label>
-                <input id="userName" type="text" name="nome" value="" class="form-control" value="">
+                <input id="userName" type="text" name="name" value="" class="form-control" value="">
               </div>
             </div>
             <div class="row mt-3" style="box-shadow: none !important;">
@@ -63,7 +64,7 @@
               </div>
               <div class="col-md-12">
                 <label class="labels">Telefone</label>
-                <input id="userPhone" type="text" name="telefone" class="form-control" value="">
+                <input id="userPhone" type="text" name="phone" class="form-control" value="">
               </div>
             </div>
             <div class="text-center" style="margin-top: 115px;"><button class="btn btn-primary" type="submit">Salvar Perfil</button></div>
