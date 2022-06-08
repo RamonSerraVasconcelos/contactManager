@@ -69,6 +69,26 @@ const UserController = {
             })
         }
 
+    },
+    async get(req, res) {
+        try {
+            if (req.params.id != req.user.id) {
+                return res.status(401).send({
+                    message: "Not authorized"
+                })
+            }
+
+            const user = await User.findOne({ where: { id: req.params.id } })
+
+            res.status(200).send({
+                user
+            })
+        } catch (error) {
+            console.error(error)
+            res.status(500).send({
+                message: "An unexpected error occurred"
+            })
+        }
     }
 }
 

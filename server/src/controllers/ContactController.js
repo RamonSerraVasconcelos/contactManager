@@ -17,7 +17,8 @@ const ContactController = {
             })
 
             return res.status(200).send({
-                contacts
+                contacts,
+                userId: req.user.id
             })
         } catch (error) {
             console.error(error)
@@ -52,7 +53,8 @@ const ContactController = {
             }
 
             return res.status(200).send({
-                contact
+                contact,
+                userId: req.user.id
             })
         } catch (error) {
             console.error(error)
