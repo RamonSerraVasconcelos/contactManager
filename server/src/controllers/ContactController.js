@@ -1,4 +1,5 @@
 import Contact from '../models/Contact.js'
+import User from '../models/User.js'
 
 const ContactController = {
     async list(req, res) {
@@ -16,9 +17,18 @@ const ContactController = {
                 }
             })
 
+            const user = await User.findOne({ where: { id: req.params.id } })
+
+            if (user.profilePic == "" || user.profilePic == null) {
+                user.profilePic = "https://bootdey.com/img/Content/avatar/avatar1.png"
+            } else {
+                user.profilePic = "http://localhost:3000/images/" + user.profilePic
+            }
+
             return res.status(200).send({
                 contacts,
-                userId: req.user.id
+                userId: req.user.id,
+                profilePic: user.profilePic
             })
         } catch (error) {
             console.error(error)
@@ -52,9 +62,18 @@ const ContactController = {
                 contact.profilePic = "http://localhost:3000/images/" + contact.profilePic
             }
 
+            const user = await User.findOne({ where: { id: req.params.id } })
+
+            if (user.profilePic == "" || user.profilePic == null) {
+                user.profilePic = "https://bootdey.com/img/Content/avatar/avatar1.png"
+            } else {
+                user.profilePic = "http://localhost:3000/images/" + user.profilePic
+            }
+
             return res.status(200).send({
                 contact,
-                userId: req.user.id
+                userId: req.user.id,
+                profilePic: user.profilePic
             })
         } catch (error) {
             console.error(error)

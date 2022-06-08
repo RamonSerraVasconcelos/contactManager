@@ -29,6 +29,7 @@ $(document).ready(function () {
                     `
                 })
                 $('#contactList').html(html)
+                $('#userPic').attr('src', res.profilePic)
                 $('#profilePageUrl').attr("href", "http://127.0.0.1:5500/client/userPage.html?id=" + res.userId)
             })
             .catch((error) => {
@@ -118,6 +119,7 @@ $(document).ready(function () {
                         </div>
                     `)
                 })
+                $('#userPic').attr('src', res.profilePic)
                 $('#profilePageUrl').attr("href", "http://127.0.0.1:5500/client/userPage.html?id=" + res.userId)
             })
             .catch((error) => {

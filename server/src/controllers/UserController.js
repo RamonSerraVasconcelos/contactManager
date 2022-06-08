@@ -80,6 +80,12 @@ const UserController = {
 
             const user = await User.findOne({ where: { id: req.params.id } })
 
+            if (user.profilePic == "" || user.profilePic == null) {
+                user.profilePic = "https://bootdey.com/img/Content/avatar/avatar1.png"
+            } else {
+                user.profilePic = "http://localhost:3000/images/" + user.profilePic
+            }
+
             res.status(200).send({
                 user
             })
